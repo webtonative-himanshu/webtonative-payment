@@ -1,9 +1,7 @@
 (function ($) {
-  //   if (!WTN.isNativeApp) {
-  //     return;
-  //   }
-
-  const cartForm = $("form.woocommerce-cart-form");
+  if (!WTN.isNativeApp) {
+    return;
+  }
 
   const addCartButton = $(".single_add_to_cart_button, .add_to_cart_button");
 
@@ -44,7 +42,7 @@
       contentType: "application/json",
       data: JSON.stringify({
         productId: productId,
-        platform: "ANDROID",
+        platform: WTN.isAndroidApp ? "ANDROID" : "IOS",
       }),
       headers: {
         "X-WP-Nonce": nonce,
@@ -71,8 +69,6 @@
       error: function (error) {},
     });
 
-    const strId = productId + "";
-
     function paymentCallback(data) {
       if (!data.isSuccess) {
         alert("Payment failed");
@@ -95,10 +91,10 @@
     return false;
   }
 
-  // if (!WTN.isNativeApp) {
-  addCartButton.off("click");
-  addCartButton.on("click", processPayment);
-  addCartButton.text("Buy Now");
-  addCartButton.removeAttr("data-wc-on--click");
-  // }
+  if (!WTN.isNativeApp) {
+    addCartButton.off("click");
+    addCartButton.on("click", processPayment);
+    addCartButton.text("Buy Now");
+    addCartButton.removeAttr("data-wc-on--click");
+  }
 })(jQuery);
