@@ -91,7 +91,7 @@
     return false;
   }
 
-  if (!WTN.isNativeApp) {
+  if (WTN.isNativeApp) {
     addCartButton.off("click");
     addCartButton.on("click", processPayment);
     addCartButton.text("Buy Now");
