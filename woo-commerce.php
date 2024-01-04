@@ -1,10 +1,6 @@
 <?php
 
 
-if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-    return;
-}
-
 
 
 class Webtonative_WC_Config
@@ -88,6 +84,10 @@ class Webtonative_WC_Config
 
 function wc_webtonative_gateway_init()
 {
+
+    if (!class_exists('WC_Payment_Gateway')) {
+        return;
+    }
 
     class WC_Webtonative_Gateway extends WC_Payment_Gateway
     {

@@ -1,14 +1,11 @@
 (function ($) {
-  if (!WTN.isNativeApp) {
+  if (!WTN.isAndroidApp && !WTN.isIosApp) {
     return;
   }
 
   const addCartButton = $(".single_add_to_cart_button, .add_to_cart_button");
 
-  function processPayment(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
+  function processPayment() {
     const productId = $(this).data("product_id") || $(this).val();
 
     if (!productId) {
@@ -91,10 +88,8 @@
     return false;
   }
 
-  if (WTN.isNativeApp) {
-    addCartButton.off("click");
-    addCartButton.on("click", processPayment);
-    addCartButton.text("Buy Now");
-    addCartButton.removeAttr("data-wc-on--click");
-  }
+  addCartButton.off("click");
+  addCartButton.on("click", processPayment);
+  addCartButton.text("Buy Now");
+  addCartButton.removeAttr("data-wc-on--click");
 })(jQuery);
