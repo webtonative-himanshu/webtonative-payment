@@ -133,7 +133,11 @@ class WebtonativePaymentRestController
         $order->add_order_note($note);
         $order_id = $order->get_id();
         update_post_meta($order_id, '_wtn_payment_data', json_encode($native_order));
-        return new WP_REST_Response($order->get_id(), 200);
+
+        $response = array(
+            "status" => "success",
+        );
+        return new WP_REST_Response($response, 200);
     }
 
     function create_ios_order(string $product_id, $request_body)
@@ -173,7 +177,11 @@ class WebtonativePaymentRestController
         $order->add_order_note($note);
         $order_id = $order->get_id();
         update_post_meta($order_id, '_wtn_payment_data', json_encode($native_order));
-        return new WP_REST_Response($order->get_id(), 200);
+
+        $response = array(
+            "status" => "success",
+        );
+        return new WP_REST_Response($response, 200);
     }
 
     function get_native_id(WP_REST_Request $request)

@@ -6,7 +6,8 @@
   const addCartButton = $(".single_add_to_cart_button, .add_to_cart_button");
 
   function processPayment() {
-    const productId = $(this).data("product_id") || $(this).val();
+    const button = $(this);
+    const productId = button.data("product_id") || button.val();
 
     if (!productId) {
       return;
@@ -30,9 +31,9 @@
           ...data,
         };
       }
-      // dataToSend.nativeProductId = "com.w2niapdemo.com.iapdemoproduct";
-      // dataToSend.receiptData = iosToken;
-      // dataToSend.platform = "IOS";
+      dataToSend.nativeProductId = "com.w2niapdemo.com.iapdemoproduct";
+      dataToSend.receiptData = iosToken;
+      dataToSend.platform = "IOS";
       $.ajax({
         url: resturl + "/order",
         type: "POST",
@@ -41,10 +42,23 @@
         headers: {
           "X-WP-Nonce": nonce,
         },
-        success: function (response) {},
-        error: function (error) {},
+        success: function (response) {
+          if (response.status === "success") {
+            button.text("Payment created");
+            button.prop("disabled", true);
+            return;
+          }
+          button.prop("disabled", false);
+        },
+        error: function (error) {
+          button.text("Payment failed");
+          button.prop("disabled", false);
+        },
       });
     }
+
+    button.text("Processing...");
+    button.prop("disabled", true);
 
     $.ajax({
       url: resturl + "/product",
@@ -69,15 +83,16 @@
           !dataToProcess.isConsumable
         ) {
           alert("Invalid product");
+          button.text("Invalid product");
           return;
         }
-        console.log(dataToProcess);
         WTN.inAppPurchase({
           ...dataToProcess,
           callback: data => paymentCallback(data, dataToProcess),
         });
       },
       error: function (error) {
+        button.text("Payment failed");
         alert("Not able to process payment");
       },
     });
@@ -85,6 +100,8 @@
     function paymentCallback(data, dataToProcess) {
       if (!data.isSuccess) {
         alert("Payment failed");
+        button.text("Buy Now");
+        button.prop("disabled", false);
         return;
       }
       const receiptData = data.receiptData;
