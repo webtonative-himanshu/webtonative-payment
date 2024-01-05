@@ -115,6 +115,8 @@ function wc_webtonative_gateway_init()
             // Load the settings.
             $this->init_settings();
             $this->enabled = $this->get_option('enabled');
+            $this->appStoreSecret = $this->get_option('appStoreSecret');
+            $this->isTest = $this->get_option('isTest');
 
             // This action hook saves the settings
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
@@ -137,6 +139,18 @@ function wc_webtonative_gateway_init()
                     'description' => '',
                     'default'     => 'no'
                 ),
+            );
+            $this->form_fields['appStoreSecret'] = array(
+                'title'       => 'App Store Secret',
+                'type'        => 'text',
+                'description' => 'App Store Secret',
+                'default'     => ''
+            );
+            $this->form_fields['isTest'] = array(
+                'title'       => 'Is Test',
+                'type'        => 'checkbox',
+                'description' => 'Is Test',
+                'default'     => 'no'
             );
         }
 
